@@ -1,7 +1,9 @@
+import asyncio
 from datasette import hookimpl
 from datasette.utils.asgi import NotFound
 import janus
-import asyncio
+from sqlite_dump import iterdump
+
 
 END = object()
 
@@ -13,8 +15,9 @@ async def backup_sql(request, datasette, send):
     except KeyError:
         raise NotFound("Invalid database: {}".format(dbname))
     queue = janus.Queue()
+
     def dump(conn):
-        for line in conn.iterdump():
+        for line in iterdump(conn):
             queue.sync_q.put(line)
         queue.sync_q.put(END)
 
@@ -32,6 +35,7 @@ async def backup_sql(request, datasette, send):
             )
             first = False
         line = await queue.async_q.get()
+        queue.async_q.task_done()
         if line is END:
             await send(
                 {
@@ -39,6 +43,8 @@ async def backup_sql(request, datasette, send):
                     "body": b"\n",
                 }
             )
+            queue.close()
+            await queue.wait_closed()
             return
         else:
             await send(

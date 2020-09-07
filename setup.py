@@ -28,7 +28,7 @@ setup(
     version=VERSION,
     packages=["datasette_backup"],
     entry_points={"datasette": ["backup = datasette_backup"]},
-    install_requires=["datasette"],
+    install_requires=["datasette", "sqlite-dump>=0.1.1"],
     extras_require={"test": ["pytest", "pytest-asyncio", "httpx", "sqlite-utils"]},
     tests_require=["datasette-backup[test]"],
 )
