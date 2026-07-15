@@ -4,7 +4,6 @@ from datasette.utils.asgi import NotFound
 import janus
 from sqlite_dump import iterdump
 
-
 END = object()
 
 
