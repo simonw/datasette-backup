@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "datasette-backup"
+version = "0.1"
+description = "Plugin adding backup options to Datasette"
+readme = "README.md"
+license = { text = "Apache License, Version 2.0" }
+authors = [
+    { name = "Simon Willison" },
+]
+dependencies = [
+    "datasette",
+    "sqlite-dump>=0.1.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/simonw/datasette-backup"
+Issues = "https://github.com/simonw/datasette-backup/issues"
+CI = "https://github.com/simonw/datasette-backup/actions"
+Changelog = "https://github.com/simonw/datasette-backup/releases"
+
+[project.entry-points.datasette]
+backup = "datasette_backup"
+
+[project.optional-dependencies]
+test = [
+    "httpx",
+    "pytest",
+    "pytest-asyncio",
+    "sqlite-utils",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/README.md",
+    "/pyproject.toml",
+    "/datasette_backup",
+    "/tests",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[dependency-groups]
+dev = [
+    "httpx",
+    "pytest",
+    "pytest-asyncio",
+    "sqlite-utils",
+]
